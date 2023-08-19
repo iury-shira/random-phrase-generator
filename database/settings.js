@@ -37,7 +37,7 @@ async function findCharacters(client, databaseName, databaseCollection, resultsL
     const cursor = client
         .db(databaseName)
         .collection(databaseCollection)
-        .find()
+        .find({ type: 'character' })
         .limit(resultsLimit);
 
     const results = await cursor.toArray();
@@ -45,8 +45,8 @@ async function findCharacters(client, databaseName, databaseCollection, resultsL
         console.log(`Found ${results.length} result(s): \n`);
         results.forEach( (element, idx) => {
             console.log(`${idx + 1}.`);
-            console.log(`    Name: ${element.name}`);
-            console.log(`    Anime: ${element.anime}`);
+            console.log(`    Name: ${element.body.name}`);
+            console.log(`    Anime: ${element.body.anime}`);
             console.log(`    Id: ${element._id}\n`);
         });
     } else {
