@@ -20,7 +20,9 @@ async function main() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         await testConnection(client, databaseName, 1);
-        await findCharacters(client, databaseName, databaseCollection, 3);
+        await findFromType(client, databaseName, databaseCollection, 5, 'character');
+        await findFromType(client, databaseName, databaseCollection, 5, 'action');
+        await findFromType(client, databaseName, databaseCollection, 5, 'thing');
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
@@ -33,20 +35,19 @@ async function testConnection(client, databaseName, pingQuantity) {
     console.log("\nPinged your deployment. You successfully connected to MongoDB!\n");
 }
 
-async function findCharacters(client, databaseName, databaseCollection, resultsLimit) {
+async function findFromType(client, databaseName, databaseCollection, resultsLimit, type) {
     const cursor = client
         .db(databaseName)
         .collection(databaseCollection)
-        .find({ type: 'character' })
+        .find({ type })
         .limit(resultsLimit);
 
     const results = await cursor.toArray();
     if (results.length) {
-        console.log(`Found ${results.length} result(s): \n`);
+        console.log(`Found ${results.length} result(s) for type ${type}: \n`);
         results.forEach( (element, idx) => {
             console.log(`${idx + 1}.`);
             console.log(`    Name: ${element.body.name}`);
-            console.log(`    Anime: ${element.body.anime}`);
             console.log(`    Id: ${element._id}\n`);
         });
     } else {
