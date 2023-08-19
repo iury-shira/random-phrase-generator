@@ -20,9 +20,13 @@ async function main() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         await testConnection(client, databaseName, 1);
-        await findFromType(client, databaseName, databaseCollection, 5, 'character');
-        await findFromType(client, databaseName, databaseCollection, 5, 'action');
-        await findFromType(client, databaseName, databaseCollection, 5, 'thing');
+
+        return {
+            'characters': await findFromType(client, databaseName, databaseCollection, 5, 'character'),
+            'actions': await findFromType(client, databaseName, databaseCollection, 5, 'action'),
+            'things': await findFromType(client, databaseName, databaseCollection, 5, 'thing')
+        }
+        
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
@@ -42,17 +46,7 @@ async function findFromType(client, databaseName, databaseCollection, resultsLim
         .find({ type })
         .limit(resultsLimit);
 
-    const results = await cursor.toArray();
-    if (results.length) {
-        console.log(`Found ${results.length} result(s) for type ${type}: \n`);
-        results.forEach( (element, idx) => {
-            console.log(`${idx + 1}.`);
-            console.log(`    Name: ${element.body.name}`);
-            console.log(`    Id: ${element._id}\n`);
-        });
-    } else {
-        console.log(`Your ${databaseCollection} MongoDB collection doesn't have entries!`);
-    }
+    return await cursor.toArray();
 }
 
 module.exports = { main };
