@@ -19,7 +19,7 @@ async function main() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        await testConnection(client, databaseName, 1);
+        // await testConnection(client, databaseName, 1);
 
         return {
             'characters': await findFromType(client, databaseName, databaseCollection, 5, 'character'),
