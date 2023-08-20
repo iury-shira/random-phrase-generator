@@ -1,6 +1,6 @@
 require('dotenv').config({path: __dirname + '/.env'});
 
-const db = require('./database/settings');
+const db = require('./database/utils');
 const prompt = require('prompt-sync')({sigint: true});
 
 let selectedOption = 0;
@@ -49,7 +49,7 @@ async function mainMenu() {
 }
 
 async function generateRandomPhrase () {
-    let { characters, actions, things } = await db.main().catch(console.error);
+    let { characters, actions, things } = await db.getAllValues();
     let character = gatRandomObjectFromDocumentsArray(characters);
     let action = gatRandomObjectFromDocumentsArray(actions);
     let thing = gatRandomObjectFromDocumentsArray(things);
@@ -58,7 +58,7 @@ async function generateRandomPhrase () {
 }
 
 async function printPossibleValues () {
-    let { characters, actions, things } = await db.main().catch(console.error);
+    let { characters, actions, things } = await db.getAllValues();
     printDocumentsArrayInfo(characters);
     printDocumentsArrayInfo(actions);
     printDocumentsArrayInfo(things);

@@ -19,14 +19,7 @@ async function main() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        // await testConnection(client, databaseName, 1);
-
-        return {
-            'characters': await findFromType(client, databaseName, databaseCollection, 5, 'character'),
-            'actions': await findFromType(client, databaseName, databaseCollection, 5, 'action'),
-            'things': await findFromType(client, databaseName, databaseCollection, 5, 'thing')
-        }
-        
+        await testConnection(client, databaseName, 1);
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
@@ -39,14 +32,4 @@ async function testConnection(client, databaseName, pingQuantity) {
     console.log("\nPinged your deployment. You successfully connected to MongoDB!\n");
 }
 
-async function findFromType(client, databaseName, databaseCollection, resultsLimit, type) {
-    const cursor = client
-        .db(databaseName)
-        .collection(databaseCollection)
-        .find({ type })
-        .limit(resultsLimit);
-
-    return await cursor.toArray();
-}
-
-module.exports = { main };
+module.exports = { databaseName, databaseCollection, client, main };
